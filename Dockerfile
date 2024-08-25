@@ -1,26 +1,15 @@
+FROM quay.io/taira_makino/taira_tech:latest
 
+RUN git clone https://github.com/patronffx1/PATRON-V1 /root/Anonphoenix007
 
-FROM node:lts-buster
+# Clear npm cache and remove node_modules directories
+RUN npm cache clean --force
+RUN rm -rf /root/Anonphoenix007/node_modules
 
-RUN apt-get update && \
-  apt-get install -y \
-  ffmpeg \
-  imagemagick \
-  webp && \
-  apt-get upgrade -y && \
-  npm i pm2 -g && \
-  rm -rf /var/lib/apt/lists/*
-  
-RUN git clone https://github.com/patronffx1/PATRON-V1  /root/Itzpatron
-WORKDIR /root/Itzpatron/
+# Install dependencies
+WORKDIR /root/Anonphoenix007
+RUN npm install
 
-
-COPY package.json .
-RUN npm install pm2 -g
-RUN npm install --legacy-peer-deps
-
-COPY . .
-
+# Add additional Steps To Run...
 EXPOSE 3000
-
 CMD ["npm","start" ]

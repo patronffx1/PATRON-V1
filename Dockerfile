@@ -1,4 +1,5 @@
 
+
 FROM node:lts-buster
 
 RUN apt-get update && \
@@ -7,20 +8,19 @@ RUN apt-get update && \
   imagemagick \
   webp && \
   apt-get upgrade -y && \
+  npm i pm2 -g && \
   rm -rf /var/lib/apt/lists/*
+  
+RUN git clone https://github.com/patronffx1/PATRON-V1  /root/Itzpatron
+WORKDIR /root/Itzpatron/
+
 
 COPY package.json .
-
-# Clear npm cache and remove node_modules directories
-RUN npm cache clean --force
-RUN rm -rf ~/node_modules 
-
-RUN npm install && npm install qrcode-terminal
+RUN npm install pm2 -g
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "index.js", "--server"]
-
-CMD ["npm i -g forever && forever index.js && forever save && forever logs"] 
+CMD ["npm","start" ]
